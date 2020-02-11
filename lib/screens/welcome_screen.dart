@@ -1,7 +1,10 @@
 import 'package:animated_text_kit/animated_text_kit.dart';
-import 'package:flashchat_app/screens/login_screen.dart';
-import 'package:flashchat_app/screens/registration_screen.dart';
+import '../widgets/round_button.dart';
+
 import 'package:flutter/material.dart';
+
+import 'login_screen.dart';
+import 'registration_screen.dart';
 
 class WelcomeScreen extends StatefulWidget {
   static String id = "welcome_screen";
@@ -39,6 +42,13 @@ class _WelcomeScreenState extends State<WelcomeScreen>
   }
 
   @override
+  void dispose() {
+    // TODO: implement dispose
+    controller.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: animation.value,
@@ -58,6 +68,7 @@ class _WelcomeScreenState extends State<WelcomeScreen>
                   ),
                 ),
                 TypewriterAnimatedTextKit(
+                  speed: Duration(milliseconds: 700),
                   text: ['Flash Chat'],
                   textStyle: TextStyle(
                     fontSize: 45.0,
@@ -69,57 +80,19 @@ class _WelcomeScreenState extends State<WelcomeScreen>
             SizedBox(
               height: 48.0,
             ),
-            RoundButton(),
-            Padding(
-              padding: EdgeInsets.symmetric(vertical: 16.0),
-              child: Material(
-                color: Colors.blueAccent,
-                borderRadius: BorderRadius.circular(30.0),
-                elevation: 5.0,
-                child: MaterialButton(
-                  onPressed: () {
-                    //Go to registration screen.
-                    Navigator.pushNamed(context, RegistrationScreen.id);
-                  },
-                  minWidth: 200.0,
-                  height: 42.0,
-                  child: Text(
-                    'Register',
-                  ),
-                ),
-              ),
-            ),
+            RoundButton(
+                buttonColor: Colors.lightBlueAccent,
+                buttonLabel: "log In",
+                buttonFunction: () {
+                  Navigator.pushNamed(context, LoginScreen.id);
+                }),
+            RoundButton(
+                buttonColor: Colors.blueAccent,
+                buttonLabel: "Register",
+                buttonFunction: () {
+                  Navigator.pushNamed(context, RegistrationScreen.id);
+                }),
           ],
-        ),
-      ),
-    );
-  }
-}
-
-class RoundButton extends StatelessWidget {
-  final Color buttonColor;
-  final String buttonLabel;
-  final Function buttonFunction;
-
-  RoundButton({this.buttonColor, this.buttonLabel, this.buttonFunction});
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.symmetric(vertical: 16.0),
-      child: Material(
-        elevation: 5.0,
-        color: Colors.lightBlueAccent,
-        borderRadius: BorderRadius.circular(30.0),
-        child: MaterialButton(
-          onPressed: () {
-            //Go to login screen.
-            Navigator.pushNamed(context, LoginScreen.id);
-          },
-          minWidth: 200.0,
-          height: 42.0,
-          child: Text(
-            'Log In',
-          ),
         ),
       ),
     );
