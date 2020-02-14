@@ -1,9 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
-
 import '../widgets/round_button.dart';
 import 'package:flutter/material.dart';
-
 import '../constants.dart';
 import 'chat_screen.dart';
 
@@ -45,7 +43,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 textAlign: TextAlign.center,
                 onChanged: (value) {
                   //Do something with the user input.
-                  email = value;
+                  email = value.toString().trim();
                 },
                 keyboardType: TextInputType.emailAddress,
                 decoration:
