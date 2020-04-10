@@ -28,13 +28,13 @@ class _ChatScreenState extends State<ChatScreen> {
     }
   }
 
-  void messagesStream() async {
-    await for (var snapshot in _firestore.collection("messages").snapshots()) {
-      for (var message in snapshot.documents) {
-        print(message.data);
-      }
-    }
-  }
+//  void messagesStream() async {
+//    await for (var snapshot in _firestore.collection("messages").snapshots()) {
+//      for (var message in snapshot.documents) {
+//        print(message.data);
+//      }
+//    }
+//  }
 
   @override
   void initState() {
@@ -65,22 +65,27 @@ class _ChatScreenState extends State<ChatScreen> {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
             StreamBuilder(
-              stream: _firestore.collection("messages").snapshots(),
+              stream:
+                  _firestore.collection("messages").orderBy("time").snapshots(),
               builder: (context, snapshot) {
                 if (!snapshot.hasData) {
                   return Container();
                 }
-                final messages = snapshot.data.documents;
-                List<Text> messageWidgets = [];
+                final messages = snapshot.data.documents.reversed;
+                List<MessageBubble> messageWidgets = [];
                 for (var message in messages) {
                   final messageText = message.data['text'];
                   final messageSender = message.data['sender'];
-                  final messageWidget =
-                      Text('$messageText from $messageSender');
+                  final messageWidget = MessageBubble(
+                    messageText: messageText,
+                    messageSender: messageSender,
+                    isMe: messageSender == loggedInUser.email,
+                  );
                   messageWidgets.add(messageWidget);
                 }
                 return Expanded(
                   child: ListView(
+                    reverse: true,
                     children: messageWidgets,
                   ),
                 );
@@ -106,8 +111,9 @@ class _ChatScreenState extends State<ChatScreen> {
                       _firestore.collection("messages").add({
                         'text': message,
                         'sender': loggedInUser.email,
+                        'time': DateTime.now(),
                       });
-                      messagesStream();
+//                      messagesStream();
                     },
                     child: Text(
                       'Send',
